@@ -311,9 +311,9 @@ class BaseRest():
         if methods is None:
             methods = ['GET']
         def decorator(func_or_viewcls: Union[Resource, Callable]) -> Union[Resource, Callable]:
-            #doc = kwargs.pop('doc', None)
-            #if doc is not None:
-            #    self._handle_doc(func_or_viewcls, doc)
+            doc = kwargs.pop('doc', None)
+            if doc is not None:
+                self._handle_doc(func_or_viewcls, doc)
             self._add_resource(func_or_viewcls, path, methods, *args, **kwargs)
             return func_or_viewcls
         return decorator
@@ -362,7 +362,7 @@ class BaseRest():
     def _handle_doc(documented: Callable, doc: Dict[str, Any]) -> None:
         """Internal function for merging doc specs for various HTTP verbs and handling expects"""
         # adapted from flask_restplus
-        '''_expand_params_desc(doc)
+        _expand_params_desc(doc)
         for http_method in http_method_funcs:
             if http_method in doc:
                 if doc[http_method] is False:
@@ -370,8 +370,7 @@ class BaseRest():
                 _expand_params_desc(doc[http_method])
                 if 'expect' in doc[http_method] and not isinstance(doc[http_method]['expect'], (list, tuple)):
                     doc[http_method]['expect'] = [doc[http_method]['expect']]
-        documented.__apidoc__ = merge(getattr(documented, '__apidoc__', {}), doc)'''
-        pass
+        documented.__apidoc__ = merge(getattr(documented, '__apidoc__', {}), doc)
 
     def doc(self, **kwargs: Any) -> Callable:
         """Generic decorator for adding docs via keys pointing to dictionaries
@@ -395,7 +394,7 @@ class BaseRest():
                   ...
         """
         def wrapper(documented: Callable) -> Callable:
-            #self._handle_doc(documented, kwargs)
+            self._handle_doc(documented, kwargs)
             return documented
         return wrapper
 
